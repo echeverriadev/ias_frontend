@@ -1,0 +1,29 @@
+.justify-content-md-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.react-datetime-picker__wrapper {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #dadada !important;
+}
+
+.wrapper-home img {
+  width: 350px;
+}
+
+.wrapper-home {
+  text-align: center;
+}
+
+.container-pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper-items {
+  display: flex;
+  justify-content: space-evenly;
+  width: 50%;
+}
