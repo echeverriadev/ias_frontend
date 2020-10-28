@@ -27,3 +27,20 @@
   justify-content: space-evenly;
   width: 50%;
 }
+
+.search-component.row {
+  text-align: center;
+}
+
+.caption-search {
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  position: relative;
+  top: -12px;
+}
+
+.list-hours {
+  list-style: none;
+  text-align: left;
+  font-weight: bold;
+}

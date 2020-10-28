@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:4000';
@@ -12,12 +13,12 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 axios.interceptors.request.use(
   (request) => {
-    console.log(request);
+    //console.log(request);
     // Edit request config
     return request;
   },
   (error) => {
-    console.log(error);
+    //console.log(error);
     return Promise.reject(error);
   }
 );

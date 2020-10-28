@@ -5,40 +5,66 @@ import Pagination from 'react-paginating';
 import axios from 'axios';
 import moment from 'moment';
 
-const limit = 2;
-const pageCount = 3;
+const limit = 4;
 
 const ServiceReports = ({ location, history }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [reports, setReport] = useState([]);
-  const total = reports.length * limit;
+  const [items, setItems] = useState([]);
+  const total = Math.ceil(reports.length);
+  const pageCount = Math.ceil(reports.length / limit);
 
   const newReport = useCallback(() => {
     history.push('/service-reports/form');
   }, [history]);
 
-  const handleGetReports = async () => {
-    const resp = await axios.get('/reports');
-    console.log(resp);
-    if (resp.status === 200 || resp.status === 201) {
-      const data = resp.data.categories.map((c) => ({
-        employee_name: c.employee_name,
-        final_date_hour: moment(c.final_date_hour).format(
-          'YYYY-MM-DD hh:mm:ss'
-        ),
-        id: c.id,
-        initial_date_hour: moment(c.initial_date_hour).format(
-          'YYYY-MM-DD hh:mm:ss'
-        ),
-        service_name: c.service_name,
-      }));
-      setReport(data);
-    }
-  };
+
+  const itemsPaginaton = useCallback(
+    (data) => {
+      //algoritmo de la paginacion client side
+      setItems([]);
+      let _items = [...data];
+  
+      if (limit > 0) {
+        _items = _items.slice((currentPage - 1) * limit, currentPage * limit);
+      }
+      console.log(_items);
+      setItems(_items);
+    },
+    [setItems, currentPage],
+  )
+
+  useEffect(() => {
+    itemsPaginaton(reports);
+  }, [currentPage, reports, itemsPaginaton]);
+
+  
+  const handleGetReports = useCallback(
+    async () => {
+      const resp = await axios.get('/reports');
+      //console.log(resp);
+      if (resp.status === 200 || resp.status === 201) {
+        const data = resp.data.categories.map((c) => ({
+          employee_name: c.employee_name,
+          final_date_hour: moment(c.final_date_hour).format(
+            'YYYY-MM-DD hh:mm:ss'
+          ),
+          id: c.id,
+          initial_date_hour: moment(c.initial_date_hour).format(
+            'YYYY-MM-DD hh:mm:ss'
+          ),
+          service_name: c.service_name,
+        }));
+        setReport(data);
+        itemsPaginaton(data);
+      }
+    },
+    [setReport,itemsPaginaton],
+  )
 
   useEffect(() => {
     handleGetReports();
-  }, []);
+  }, [handleGetReports]);
 
   const handlePageChange = useCallback(
     (page, e) => {
@@ -72,8 +98,8 @@ const ServiceReports = ({ location, history }) => {
               </tr>
             </thead>
             <tbody>
-              {reports.length ? (
-                reports.map((r) => {
+              {items.length ? (
+                items.map((r) => {
                   return (
                     <tr key={r.id}>
                       <td>{r.id}</td>
@@ -95,7 +121,6 @@ const ServiceReports = ({ location, history }) => {
                   </td>
                   <td></td>
                   <td></td>
-                  
                 </tr>
               )}
             </tbody>

@@ -6,6 +6,7 @@ import DateTimePicker from 'react-datetime-picker';
 import moment from 'moment';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ServiceReportForm = ({ history }) => {
   const [dateInitial, setDateInitial] = useState(new Date());
@@ -43,13 +44,29 @@ const ServiceReportForm = ({ history }) => {
     },
   });
 
-  const handleSubmit = useCallback(async (body) => {
-    const result = await axios.post('/reports', body);
-    if (result.status === 200 || result.status === 201) {
-      alert(result.message);
-      history.goBack();
-    }
-  }, [history]);
+  const toastMessage = useCallback((text) => {
+    toast.success(text, {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }, []);
+
+  const handleSubmit = useCallback(
+    async (body) => {
+      //guardar en el backend el reporte del tecnico
+      const result = await axios.post('/reports', body);
+      if (result.status === 200 || result.status === 201) {
+        toastMessage(result.data.message);
+        history.goBack();
+      }
+    },
+    [history, toastMessage]
+  );
 
   return (
     <LayoutCard>
